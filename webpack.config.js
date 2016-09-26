@@ -1,5 +1,5 @@
 var config = {
-  entry: './main.js'
+  entry: './main.js',
 
   output: {
     path: './',
@@ -19,7 +19,7 @@ var config = {
         loader: 'babel',
 
         query: {
-          presets: ['es2015'. 'react']
+          presets: ['es2015', 'react']
         }
       }
     ]
