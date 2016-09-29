@@ -1,3 +1,9 @@
+var data = [
+  {id: 1, author: "Rachel Jenkins-Stevens", text: "Hey Baby!"},
+  {id: 2, author: "Noah Wimmer", text: "I love titties"},
+  {id: 3, author: "Breon Knight", text: "Bruh, I gota STD"}
+];
+
 var Comment = React.createClass({
   rawMarkup: function() {
     var md = new Remarkable();
@@ -18,10 +24,16 @@ var Comment = React.createClass({
 
 var CommentList = React.createClass({
   render: function() {
+    var commentNodes = this.props.data.map(function(comment) {
+      return (
+        <Comment author={comment.author} key={comment.id}>
+          {comment.text}
+        </Comment>
+      );
+    });
     return (
       <div className="commentList">
-        <Comment author="Peter Hunt">This is one Comment</Comment>
-        <Comment author="Noah Wimmer">I love titties</Comment>
+        {commentNodes}
       </div>
     );
   }
@@ -38,22 +50,31 @@ var CommentForm = React.createClass({
 });
 
 var CommentBox = React.createClass({
+  getInitialState: function() {
+    return {data: []};
+  },
+  componentDidMount: function() {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState({data: data});
+      }.bind(this),
+    });
+  },
   render: function() {
     return (
       <div className="commentBox">
         <h1>Comments</h1>
-        <CommentList />
+        <CommentList data={this.state.data} />
         <CommentForm />
       </div>  
     );
   }
 });
 
-
-
-
-
 ReactDOM.render(
-  <CommentBox />,
+  <CommentBox url="/api/cpmments" />,
   document.getElementById('content')
 );
